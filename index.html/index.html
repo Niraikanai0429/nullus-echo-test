@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nullus germen — Echo</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:#10121a;color:#eef1fa;font-family:system-ui,sans-serif}
+main{max-width:700px;margin:auto}
+h1{font-size:21px;letter-spacing:.08em}
+p{color:#aeb5c8;line-height:1.7}
+.panel{background:#1a1e2b;border:1px solid #30384b;border-radius:16px;padding:18px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+input,select,button{font:inherit;padding:12px;border-radius:9px;border:1px solid #414b63;background:#111622;color:white}
+input{min-width:100px;flex:1}
+button{background:#273958}
+.stage{display:grid;place-items:center;background:white;border-radius:12px;margin:18px auto;width:min(100%,340px);aspect-ratio:1}
+svg{width:100%;height:100%}
+#meta{font:12px monospace;color:#aeb5c8;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<main>
+<h1>NULLUS GERMEN / ECHO</h1>
+<p>同じ入力から同じ個体を生成する、Echo氏族の形態試作。</p>
+<section class="panel">
+<div class="controls">
+<input id="name" value="Yuki" placeholder="名前">
+<input id="number" value="0429" inputmode="numeric" placeholder="数字">
+</div>
+<div class="controls">
+<select id="polarity"><option>Lux</option><option>Abyss</option></select>
+<button id="generate">生成</button>
+</div>
+<div class="stage"><svg id="specimen"></svg></div>
+<div id="meta"></div>
+<p>Echoの同心円型／膜ネットワーク型を試す初期プロトタイプです。</p>
+</section>
+</main>
+<script src="echo-renderer.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+function go(){
+ const name=$("name").value.normalize("NFC").trim();
+ const num=$("number").value.trim();
+ if(!name||!/^[0-9]+$/.test(num)){alert("名前と整数を入力してください");return}
+ const key=name+"|"+String(BigInt(num));
+ const out=renderEcho($("specimen"),key,$("polarity").value);
+ $("meta").textContent="ECHO / "+out.mode.toUpperCase()+" / seed "+out.seed;
+}
+$("generate").onclick=go;
+go();
+</script>
+</body>
+</html>
